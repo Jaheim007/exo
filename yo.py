@@ -10,8 +10,6 @@ def connect():
     frame2.pack(pady=10)
 
 window = Tk()
-window.resizable(False,False)
-window.geometry("800x800")
 window.configure(bg="#349beb")
 
 frame = Frame(window, highlightbackground="black", highlightthickness=3)
@@ -31,7 +29,7 @@ nome = Entry(frame2).pack()
 last1= Label(frame2, text="Last").pack()
 last3 = Entry(frame2).pack()
 
-btn
+btn = Button(frame2, text="Connect").pack()
 
 
 window.mainloop()

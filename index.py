@@ -12,6 +12,8 @@ import re
 """Created The Inscription page And added a simple database but
 I still have to encrypt the password"""
 
+
+
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 inscription = Tk()
