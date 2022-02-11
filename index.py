@@ -143,7 +143,7 @@ def lite():
             cmdp_entry.delete(0, END)
             
 
-btn = Button(frame, text="",command=lite , font="Roboto 16")
+btn = Button(frame, text="Sumbit",command=lite , font="Roboto 16")
 btn.pack(ipadx=10, ipady=3, pady=20)
 
 inscription.mainloop()
