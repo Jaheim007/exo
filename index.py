@@ -1,4 +1,5 @@
 #Added all my imports from tkinter.
+from calendar import c
 from tkinter import messagebox
 from cryptography.fernet import Fernet
 from cProfile import label
@@ -143,7 +144,11 @@ def lite():
             cmdp_entry.delete(0, END)
             
 
+<<<<<<< HEAD
 btn = Button(frame, text="Sumbit",command=lite , font="Roboto 16")
+=======
+btn = Button(frame, text="Submit",command=lite , font="Roboto 16")
+>>>>>>> 8739ddac813d8ba907456ec98d18eed40f15c849
 btn.pack(ipadx=10, ipady=3, pady=20)
 
 inscription.mainloop()
@@ -169,7 +174,10 @@ def connect():
     mdp_entry = Entry(frame)
     mdp_entry.pack(ipadx=15, ipady=3)
     
-    # if Username not in 
+    c.execute("SELECT * FROM informations")
+    if Username not in 
+    
+  
 
     btn = Button(frame, text="Sumbit", font="Roboto 16")
     btn.pack(ipadx=10, ipady=3, pady=20)
