@@ -16,7 +16,7 @@ regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 inscription = Tk()
 inscription.configure(bg="#349beb")
-inscription.attributes('-alpha', 0.9)
+# inscription.attributes('-alpha', 0.9)
 
 #Created the First Window Frame Which is the main Principle Frame
 frame = Frame(inscription, highlightthickness=5, highlightbackground="black")
@@ -134,21 +134,17 @@ def lite():
             conn.commit()
             conn.close()
 
-        else: 
-            messagebox.showerror("Error", "Merci de saisir votre adresse email au format : votreexemple@exemple.com") 
-            
-            Nom_entry.delete(0,END)
-            Prenom_entry.delete(0, END)
-            Email_entry.delete(0, END)
-            mdp_entry.delete(0, END)
-            cmdp_entry.delete(0, END)
+    else: 
+        messagebox.showerror("Error", "Merci de saisir votre adresse email au format : votreexemple@exemple.com") 
+        
+        Nom_entry.delete(0,END)
+        Prenom_entry.delete(0, END)
+        Email_entry.delete(0, END)
+        mdp_entry.delete(0, END)
+        cmdp_entry.delete(0, END)
             
 
-<<<<<<< HEAD
 btn = Button(frame, text="Sumbit",command=lite , font="Roboto 16")
-=======
-btn = Button(frame, text="Submit",command=lite , font="Roboto 16")
->>>>>>> 8739ddac813d8ba907456ec98d18eed40f15c849
 btn.pack(ipadx=10, ipady=3, pady=20)
 
 inscription.mainloop()
@@ -175,7 +171,7 @@ def connect():
     mdp_entry.pack(ipadx=15, ipady=3)
     
     c.execute("SELECT * FROM informations")
-    if Username not in 
+    
     
   
 
