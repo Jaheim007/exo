@@ -1,4 +1,5 @@
 from cProfile import label
+from calendar import c
 import email
 from pydoc import text
 from tkinter import *
@@ -28,46 +29,46 @@ frame = Frame(window, highlightbackground="black", highlightthickness=3)
 frame.configure(bg= "#606873")
 frame.pack(pady=200, ipady=50,ipadx=50)
 
-heading1 = Label(frame, text="Formulaire", font="Arial 17 underline",fg="white" ,bg="#606873")
+heading1 = Label(frame, text="Formulaire", font="Arial 17 underline", bg="#606873")
 heading1.pack(pady=20)
 
-btn = Button(frame, text="Connexion", command= connect,font="Arial 14" , fg="white",bg="#4271b3" ,relief=RIDGE)
+btn = Button(frame, text="Connexion", command= connect,font="Arial 14", bd=0 )
 btn.pack(pady=5)
 
-btn2 = Button(frame, text="Inscription", font="Arial 14",fg="white",bg="#4271b3",command=sign, relief=RIDGE)
+btn2 = Button(frame, text="Inscription", font="Arial 14", bg="#4271b3" ,command=sign, relief=RIDGE)
 btn2.pack(pady=10)
 
-btn3 = Button(frame, text="Deconnexion", command=window.quit, font="Arial 14",fg="white", bg="#4271b3" ,relief=RIDGE)
+btn3 = Button(frame, text="Deconnexion", command=window.quit, font="Arial 14", bg="#4271b3" ,relief=RIDGE)
 btn3.pack(pady=10)
 
 
 frame2 = Frame(window, highlightbackground="black", highlightthickness=3)
 frame2.configure(bg="#606873")
 
-heading2 = Label(frame2, text="Page D'Inscription", font="Arial 17 underline",fg="white" ,bg="#606873")
+heading2 = Label(frame2, text="Page D'Inscription", font="Arial 17 underline", bg="#606873")
 heading2.pack(pady=10)
 
-nomlabel = Label(frame2, text="Nom", font="Arial 15", fg="white" , bg="#606873")
+nomlabel = Label(frame2, text="Nom", font="Arial 15", bg="#606873")
 nomlabel.pack(pady=10)
 nomentry = Entry(frame2)
 nomentry.pack(pady=10)
 
-prenomlabel= Label(frame2, text="Prenom", font="Arial 15", fg="white", bg="#606873")
+prenomlabel= Label(frame2, text="Prenom", font="Arial 15", bg="#606873")
 prenomlabel.pack(pady=10)
 prenomentry = Entry(frame2)
 prenomentry.pack(pady=10)
 
-emaillabel= Label(frame2, text="Email", font="Arial 15", fg="white", bg="#606873")
+emaillabel= Label(frame2, text="Email", font="Arial 15", bg="#606873")
 emaillabel.pack(pady=10)
 emailentry = Entry(frame2)
 emailentry.pack(pady=10)
 
-mdplabel= Label(frame2, text="Mot de passe", font="Arial 15", fg="white", bg="#606873")
+mdplabel= Label(frame2, text="Mot de passe", font="Arial 15", bg="#606873")
 mdplabel.pack(pady=10)
 mdpentry = Entry(frame2, show="•")
 mdpentry.pack(pady=10)
 
-cmdplabel= Label(frame2, text="Confirme mot de passe ", font="Arial 15", fg="white", bg="#606873")
+cmdplabel= Label(frame2, text="Confirme mot de passe ", font="Arial 15", bg="#606873")
 cmdplabel.pack(pady=10)
 cmdpentry = Entry(frame2,show="•")
 cmdpentry.pack(pady=10)
@@ -80,6 +81,7 @@ def lite():
     key = Fernet.generate_key()
     fernet = Fernet(key)
     encmdp = fernet.encrypt(mdpentry.get().encode())
+
 
     d = {
     "nom": nomentry.get(),
@@ -141,7 +143,7 @@ def lite():
             conn.close()
 
         frame2.pack_forget()
-        frame.pack(pady=200, ipady=50,ipadx=50)
+        frame.pack(pady=200, ipady=50,ipadx=50)  
     
     else: 
         messagebox.showerror("Error", "Merci de saisir votre adresse email au format : votreexemple@exemple.com") 
@@ -151,32 +153,51 @@ def lite():
         emailentry.delete(0, END)
         mdpentry.delete(0, END)
         cmdpentry.delete(0, END)
-
+    
+    
     
 
-btn = Button(frame2, text="Sumbit",command=lite , font="Roboto 16", bg="#4271b3" , fg="white")
+btn = Button(frame2, text="Sumbit",command=lite , font="Roboto 16", bg="#4271b3")
 btn.pack(ipadx=10, ipady=3, pady=20)
 
 frame3 = Frame(window, highlightbackground="black", highlightthickness=3)
 frame3.configure(bg="#606873")
 
-heading3 = Label(frame3, text="Page De Connexion", font="Arial 17 underline",fg="white" ,bg="#606873")
+heading3 = Label(frame3, text="Page De Connexion", font="Arial 17 underline",bg="#606873")
 heading3.pack(pady=10)
 
-usernamelabel = Label(frame3, text="Username", font="Arial 15", fg="white" , bg="#606873")
+usernamelabel = Label(frame3, text="Username", font="Arial 15", bg="#606873")
 usernamelabel.pack(pady=10)
 usernameentry = Entry(frame3)
 usernameentry.pack(pady=10)
 
-mpdlabel = Label(frame3, text="Mot de passe", font="Arial 15", fg="white" , bg="#606873")
+mpdlabel = Label(frame3, text="Mot de passe", font="Arial 15", bg="#606873")
 mpdlabel.pack(pady=10)
 mpdentry = Entry(frame3)
 mpdentry.pack(pady=10)
 
+key = Fernet.generate_key()
+fernet = Fernet(key)
+enmdp = fernet.encrypt(mdpentry.get().encode())
 
 
+def correct():
+    
+    connecte  = sqlite3.connect("database.db")
+    
+    dictornary={
+    "username": usernameentry.get(), 
+    "mdp": enmdp}
+    
+    c = connecte.cursor()      
+    c.execute("SELECT email,mdp FROM informations WHERE email=:username and mdp=:mdp", dictornary)
+    donnes = c.fetchall()
+    print(donnes)
 
-btn = Button(frame3, text="Vailde", font="Roboto 16", bg="#4271b3" , fg="white")
+    connecte.commit()
+    connecte.close()
+
+btn = Button(frame3, text="Vailde", command=correct, font="Roboto 16", bg="#4271b3" )
 btn.pack(ipadx=10, ipady=3, pady=20)
 
 
