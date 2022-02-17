@@ -1,13 +1,14 @@
 from cProfile import label
-from calendar import c
+
 import email
 from pydoc import text
 from tkinter import *
 import sqlite3
 from tkinter import font
 import tkinter
+import hashlib
 from turtle import heading
-from cryptography.fernet import Fernet 
+# from cryptography.fernet import Fernet 
 from tkinter import messagebox
 import re
 
@@ -32,10 +33,10 @@ frame.pack(pady=200, ipady=50,ipadx=50)
 heading1 = Label(frame, text="Formulaire", font="Arial 17 underline", bg="#606873")
 heading1.pack(pady=20)
 
-btn = Button(frame, text="Connexion", command= connect,font="Arial 14", bd=0 )
+btn = Button(frame, text="Inscription", command= connect,font="Arial 14", bd=0 )
 btn.pack(pady=5)
 
-btn2 = Button(frame, text="Inscription", font="Arial 14", bg="#4271b3" ,command=sign, relief=RIDGE)
+btn2 = Button(frame, text="Connexion", font="Arial 14", bg="#4271b3" ,command=sign, relief=RIDGE)
 btn2.pack(pady=10)
 
 btn3 = Button(frame, text="Deconnexion", command=window.quit, font="Arial 14", bg="#4271b3" ,relief=RIDGE)
@@ -74,20 +75,23 @@ cmdpentry = Entry(frame2,show="•")
 cmdpentry.pack(pady=10)
 
 def lite():
-    
     conn  = sqlite3.connect("database.db")
 
     # I used this to encryted the password
-    key = Fernet.generate_key()
-    fernet = Fernet(key)
-    encmdp = fernet.encrypt(mdpentry.get().encode())
+    # key = Fernet.generate_key()
+    # fernet = Fernet(key)
+    # encmdp = fernet.encrypt(mdpentry.get().encode())
+    
+    enmdp = mdpentry.get().encode()
+    unicode=hashlib.sha3_256(enmdp)
+    vote= unicode.hexdigest()
 
 
     d = {
     "nom": nomentry.get(),
     "prenom": prenomentry.get(),
     "email": emailentry.get(),
-    "mdp" : encmdp 
+    "mdp" : vote 
     }
 
     if nomentry.get() == "" or prenomentry.get()== "" or emailentry.get() =="" or mdpentry.get()=="":    
@@ -132,6 +136,9 @@ def lite():
                 )""")
 
             c.execute("INSERT INTO informations VALUES(:nom, :prenom, :email, :mdp)", d)
+            c.execute("SELECT email,mdp FROM informations WHERE email=:email and mdp=:mdp", d)
+            donnes = c.fetchone()
+            print(donnes)
 
             nomentry.delete(0,END)
             prenomentry.delete(0, END)
@@ -173,24 +180,31 @@ usernameentry.pack(pady=10)
 
 mpdlabel = Label(frame3, text="Mot de passe", font="Arial 15", bg="#606873")
 mpdlabel.pack(pady=10)
-mpdentry = Entry(frame3)
-mpdentry.pack(pady=10)
+mpdentry2 = Entry(frame3)
+mpdentry2.pack(pady=10)
 
-key = Fernet.generate_key()
-fernet = Fernet(key)
-enmdp = fernet.encrypt(mdpentry.get().encode())
+enmdp1 = mpdentry2.get().encode()
+unicode1=hashlib.sha3_256(enmdp1)
+vote1= unicode1.hexdigest()
+print("encrypted", enmdp1)
+
+# vote1 = unicode1.hexdigest().decode
+
+
+
 
 
 def correct():
-    
-    connecte  = sqlite3.connect("database.db")
+    global vote1
     
     dictornary={
-    "username": usernameentry.get(), 
-    "mdp": enmdp}
+    "nom": usernameentry.get() ,
+    "mdp": vote1 
+    }
     
+    connecte  = sqlite3.connect("database.db")
     c = connecte.cursor()      
-    c.execute("SELECT email,mdp FROM informations WHERE email=:username and mdp=:mdp", dictornary)
+    c.execute("SELECT * FROM informations WHERE nom=:nom AND mdp=:mdp ", dictornary)
     donnes = c.fetchall()
     print(donnes)
 
