@@ -119,7 +119,8 @@ def lite():
             c.execute(""" CREATE TABLE IF NOT EXISTS informations (   
                     nom text,
                     prenom text,
-                    email text, 
+                    email text,
+                     
                     mdp text
                 )""")
         

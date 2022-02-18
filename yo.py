@@ -1,6 +1,6 @@
 from cProfile import label
 
-import email
+import email 
 from pydoc import text
 from tkinter import *
 import sqlite3
@@ -11,6 +11,8 @@ from turtle import heading
 # from cryptography.fernet import Fernet 
 from tkinter import messagebox
 import re
+
+
 
 def connect():    
     frame.pack_forget()
@@ -149,9 +151,7 @@ def lite():
             conn.commit()
             conn.close()
 
-        frame2.pack_forget()
-        frame.pack(pady=200, ipady=50,ipadx=50)  
-    
+      
     else: 
         messagebox.showerror("Error", "Merci de saisir votre adresse email au format : votreexemple@exemple.com") 
 
@@ -160,6 +160,9 @@ def lite():
         emailentry.delete(0, END)
         mdpentry.delete(0, END)
         cmdpentry.delete(0, END)
+    
+    frame2.pack_forget()
+    frame3.pack(pady=200, ipady=50,ipadx=50)  
     
     
     
