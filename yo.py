@@ -8,6 +8,7 @@ from tkinter import font
 import tkinter
 from turtle import heading
 from cryptography.fernet import Fernet 
+import hashlib
 from tkinter import messagebox
 import re
 
@@ -19,7 +20,8 @@ def sign():
     frame.pack_forget()
     frame3.pack(pady=200, ipady=50, ipadx=50)
    
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+#regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
 window = Tk()
 window.configure(bg="#4271b3")
@@ -78,16 +80,18 @@ def lite():
     conn  = sqlite3.connect("database.db")
 
     # I used this to encryted the password
-    key = Fernet.generate_key()
-    fernet = Fernet(key)
-    encmdp = fernet.encrypt(mdpentry.get().encode())
-
+    #key = Fernet.generate_key()
+    #fernet = Fernet(key)
+    #encmdp = fernet.encrypt(mdpentry.get().encode())
+    hash_mdp=cmdpentry.get().encode()
+    d=hashlib.sha3_256(hash_mdp)
+    hachage=d.hexdigest()
 
     d = {
     "nom": nomentry.get(),
     "prenom": prenomentry.get(),
     "email": emailentry.get(),
-    "mdp" : encmdp 
+    "mdp" : hachage 
     }
 
     if nomentry.get() == "" or prenomentry.get()== "" or emailentry.get() =="" or mdpentry.get()=="":    
@@ -176,23 +180,35 @@ mpdlabel.pack(pady=10)
 mpdentry = Entry(frame3)
 mpdentry.pack(pady=10)
 
-key = Fernet.generate_key()
-fernet = Fernet(key)
-enmdp = fernet.encrypt(mdpentry.get().encode())
+#key = Fernet.generate_key()
+#fernet = Fernet(key)
+#enmdp = fernet.encrypt(mdpentry.get().encode())
+hash_mdp_co=mpdentry.get().encode()
+d=hashlib.sha3_256(hash_mdp_co)
+hachee=d.hexdigest()
 
-
+print(hachee)
 def correct():
     
     connecte  = sqlite3.connect("database.db")
     
     dictornary={
     "username": usernameentry.get(), 
-    "mdp": enmdp}
+    "mdp": hachee
+    }
     
+    print(dictornary)
     c = connecte.cursor()      
-    c.execute("SELECT email,mdp FROM informations WHERE email=:username and mdp=:mdp", dictornary)
+    c.execute("SELECT * FROM informations WHERE email=:username AND mdp=:mdp", dictornary)
     donnes = c.fetchall()
     print(donnes)
+    for i in donnes:
+        if  usernameentry.get() in i and hachee in i:
+            messagebox.showinfo("info", "Vous etes connecte")
+            break
+
+
+
 
     connecte.commit()
     connecte.close()
