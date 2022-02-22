@@ -1,16 +1,19 @@
 from cProfile import label
-from calendar import c
-import email
+
+import email 
 from pydoc import text
 from tkinter import *
 import sqlite3
 from tkinter import font
 import tkinter
+import hashlib
 from turtle import heading
 from cryptography.fernet import Fernet 
 import hashlib
 from tkinter import messagebox
 import re
+
+
 
 def connect():    
     frame.pack_forget()
@@ -34,10 +37,10 @@ frame.pack(pady=200, ipady=50,ipadx=50)
 heading1 = Label(frame, text="Formulaire", font="Arial 17 underline", bg="#606873")
 heading1.pack(pady=20)
 
-btn = Button(frame, text="Connexion", command= connect,font="Arial 14", bd=0 )
+btn = Button(frame, text="Inscription", command= connect,font="Arial 14", bd=0 )
 btn.pack(pady=5)
 
-btn2 = Button(frame, text="Inscription", font="Arial 14", bg="#4271b3" ,command=sign, relief=RIDGE)
+btn2 = Button(frame, text="Connexion", font="Arial 14", bg="#4271b3" ,command=sign, relief=RIDGE)
 btn2.pack(pady=10)
 
 btn3 = Button(frame, text="Deconnexion", command=window.quit, font="Arial 14", bg="#4271b3" ,relief=RIDGE)
@@ -76,7 +79,6 @@ cmdpentry = Entry(frame2,show="•")
 cmdpentry.pack(pady=10)
 
 def lite():
-    
     conn  = sqlite3.connect("database.db")
 
     # I used this to encryted the password
@@ -136,6 +138,9 @@ def lite():
                 )""")
 
             c.execute("INSERT INTO informations VALUES(:nom, :prenom, :email, :mdp)", d)
+            c.execute("SELECT email,mdp FROM informations WHERE email=:email and mdp=:mdp", d)
+            donnes = c.fetchone()
+            print(donnes)
 
             nomentry.delete(0,END)
             prenomentry.delete(0, END)
@@ -146,9 +151,7 @@ def lite():
             conn.commit()
             conn.close()
 
-        frame2.pack_forget()
-        frame.pack(pady=200, ipady=50,ipadx=50)  
-    
+      
     else: 
         messagebox.showerror("Error", "Merci de saisir votre adresse email au format : votreexemple@exemple.com") 
 
@@ -157,6 +160,9 @@ def lite():
         emailentry.delete(0, END)
         mdpentry.delete(0, END)
         cmdpentry.delete(0, END)
+    
+    frame2.pack_forget()
+    frame3.pack(pady=200, ipady=50,ipadx=50)  
     
     
     
@@ -177,20 +183,29 @@ usernameentry.pack(pady=10)
 
 mpdlabel = Label(frame3, text="Mot de passe", font="Arial 15", bg="#606873")
 mpdlabel.pack(pady=10)
-mpdentry = Entry(frame3)
-mpdentry.pack(pady=10)
+mpdentry2 = Entry(frame3)
+mpdentry2.pack(pady=10)
+
+enmdp1 = mpdentry2.get().encode()
+unicode1=hashlib.sha3_256(enmdp1)
+vote1= unicode1.hexdigest()
+print("encrypted", enmdp1)
+
+# vote1 = unicode1.hexdigest().decode
+
+
 
 #key = Fernet.generate_key()
 #fernet = Fernet(key)
 #enmdp = fernet.encrypt(mdpentry.get().encode())
-hash_mdp_co=mpdentry.get().encode()
+hash_mdp_co=mpdentry2.get().encode()
 d=hashlib.sha3_256(hash_mdp_co)
 hachee=d.hexdigest()
 
 print(hachee)
 def correct():
-    
-    connecte  = sqlite3.connect("database.db")
+    global vote1
+    connecte = sqlite3.connect('database.db')
     
     dictornary={
     "username": usernameentry.get(), 
